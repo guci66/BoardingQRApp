@@ -1,4 +1,4 @@
-name: Android CI (SDK ready, CRLF fixed)
+name: Android CI (no-wrapper)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  ANDROID_PLATFORM: "platforms;android-34"         # 和项目 compileSdk = 34 对齐
+  ANDROID_PLATFORM: "platforms;android-34"
   ANDROID_BUILD_TOOLS: "build-tools;34.0.0"
 
 jobs:
@@ -30,15 +30,11 @@ jobs:
           sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" "${ANDROID_PLATFORM}" "${ANDROID_BUILD_TOOLS}" "platform-tools"
           yes | sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --licenses
 
-      # 关键：把 Windows 推上来的 CRLF 改回 LF，否则 gradlew 在 Linux 会报错
-      - name: Fix line endings and make gradlew executable
-        run: |
-          sed -i 's/\r$//' gradlew
-          chmod +x gradlew
-
+      # 用 gradle-build-action 自带的 Gradle 8.7（不依赖 gradlew）
       - name: Build Debug APK
         uses: gradle/gradle-build-action@v3
         with:
+          gradle-version: 8.7
           arguments: :app:assembleDebug
 
       - name: Upload Debug APK

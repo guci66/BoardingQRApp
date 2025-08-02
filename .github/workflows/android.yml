@@ -1,4 +1,4 @@
-name: Android CI (no-wrapper)
+name: Android CI (wrapper-ready)
 
 on:
   push:
@@ -20,7 +20,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: gradle
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
@@ -30,12 +29,27 @@ jobs:
           sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" "${ANDROID_PLATFORM}" "${ANDROID_BUILD_TOOLS}" "platform-tools"
           yes | sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --licenses
 
-      # 用 gradle-build-action 自带的 Gradle 8.7（不依赖 gradlew）
+      # 如果 wrapper 的 jar 不在仓库里，这里会自动下载
+      - name: Ensure Gradle Wrapper jar exists
+        run: |
+          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
+            echo "gradle-wrapper.jar missing, downloading..."
+            mkdir -p gradle/wrapper
+            curl -sLo gradle/wrapper/gradle-wrapper.jar https://services.gradle.org/distributions/gradle-8.7-wrapper.jar
+          fi
+
+      - name: Fix line endings and make gradlew executable
+        run: |
+          sed -i 's/\r$//' gradlew
+          chmod +x gradlew
+
+      # 官方推荐的新动作：仅做 Gradle 缓存和准备工作
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # 用 wrapper 执行 Gradle（符合新规范，不再用老的 arguments 方式）
       - name: Build Debug APK
-        uses: gradle/gradle-build-action@v3
-        with:
-          gradle-version: 8.7
-          arguments: :app:assembleDebug
+        run: ./gradlew :app:assembleDebug
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4

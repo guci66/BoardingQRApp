@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Boarding QR</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="history">History</string>
+    <string name="sample_qr">Sample QR</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="boarding_success">Boarding Success</string>
+    <string name="boarding_rejected">Rejected</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="export">Export CSV</string>
+<string name="filters">Filters</string>
+    <string name="status">Status</string>
+    <string name="all">All</string>
+    <string name="accepted">ACCEPT</string>
+    <string name="rejected">REJECT</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="apply_filters">Apply</string>
+    <string name="clear_filters">Clear</string>
+    <string name="import_image">Import from Gallery</string>
+    <string name="export_filtered_csv">Export Filtered CSV</string>
+    <string name="share">Share</string>
+</resources>

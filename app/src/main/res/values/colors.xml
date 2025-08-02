@@ -1,0 +1,5 @@
+<resources>
+    <color name="success_green">#2E7D32</color>
+    <color name="error_red">#C62828</color>
+    <color name="warning_orange">#EF6C00</color>
+</resources>
